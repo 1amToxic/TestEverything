@@ -35,9 +35,9 @@ public class ChatClientReceive implements Runnable {
                 Object o = ois.readObject();
                 if (o instanceof Message) {
                     Message mes = (Message) o;
-                    if(idClient != mes.getId()){
+//                    if(idClient != mes.getId()){
                         chatFrm.appendText(mes.toString());
-                    }
+//                    }
                 }
                 Thread.sleep(100);
             }
