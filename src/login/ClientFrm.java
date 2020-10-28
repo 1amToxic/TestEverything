@@ -20,8 +20,8 @@ import javax.swing.JOptionPane;
 public class ClientFrm extends javax.swing.JFrame {
 
     private Socket mySocket;
-    private String serverHost = "localhost";
-    private int serverPort = 8888;
+    private String serverHost = "192.168.43.100";
+    private int serverPort = 4567;
     ObjectInputStream ois = null;
     ObjectOutputStream oos = null;
 
@@ -35,6 +35,7 @@ public class ClientFrm extends javax.swing.JFrame {
 
     public void closeConnection() {
         try {
+            
             mySocket.close();
         } catch (IOException ex) {
             Logger.getLogger(ClientFrm.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,6 +78,11 @@ public class ClientFrm extends javax.swing.JFrame {
         jButton1.setText("jButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Username");
 
@@ -146,22 +152,10 @@ public class ClientFrm extends javax.swing.JFrame {
         User user = new User(username, password);
         
         Message mesSend = new Message(user, Message.Type.LOGIN);
-//            oos.writeObject(mesSend);
-//            Object o = ois.readObject();
-//            if (o instanceof Message) {
-//                Message mes = (Message) o;
-//                if (mes.getType() == Message.Type.LOGIN_SUCCESS) {
-//                    setNotification("Success");
-//                } else {
-//                    setNotification("Fail");
-//                }
-//            }
         Thread thread = new Thread(new ThreadSendData(oos, ois, mesSend));
         thread.start();
         Thread thread1 = new Thread(new ThreadReceiveData(oos, ois, this));
         thread1.start();
-//        thread.interrupt();
-//        thread1.interrupt();
 
 
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -177,26 +171,15 @@ public class ClientFrm extends javax.swing.JFrame {
             thread.start();
             Thread thread1 = new Thread(new ThreadReceiveData(oos, ois, this));
             thread1.start();
-//            thread.interrupt();
-//            thread1.interrupt();
-//            oos.writeObject(mesSend);
-//            Object o = ois.readObject();
-//            if (o instanceof Message) {
-//                Message mes = (Message) o;
-//                if (mes.getType() == Message.Type.REGISTER_SUCCESS) {
-//                    setNotification("Success Register");
-//                }else{
-//                    setNotification("Fail Register");
-//                }
-//                    
-//            }
-//            Thread thread = new Thread(new ThreadClient(mySocket, this));
-//            thread.start();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        closeConnection();
+    }//GEN-LAST:event_formWindowClosing
     public void setNotification(String mes) {
         JOptionPane.showMessageDialog(this, mes);
     }

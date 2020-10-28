@@ -28,7 +28,6 @@ public class ThreadSendData implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println("send data");
             oos.writeObject(mes);
         } catch (IOException ex) {
             Logger.getLogger(ThreadSendData.class.getName()).log(Level.SEVERE, null, ex);

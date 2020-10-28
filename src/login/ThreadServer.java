@@ -43,9 +43,6 @@ public class ThreadServer implements Runnable {
             ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
             while (true) {
-//                clientSocket = myServer.accept();
-//                ois = new ObjectInputStream(clientSocket.getInputStream());
-//                oos = new ObjectOutputStream(clientSocket.getOutputStream());
                 Object o = ois.readObject();
                 if (o instanceof Message) {
                     System.out.println("server receiver");
@@ -78,13 +75,6 @@ public class ThreadServer implements Runnable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        try {
-//            clientSocket.close();
-//
-//            myServer.close();
-//        } catch (IOException ex) {
-//            Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     private boolean checkValidRegister(User user) {

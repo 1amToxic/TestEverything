@@ -54,9 +54,6 @@ public class ThreadReceiveData implements Runnable {
                             break;
                     }
                 }
-//                oos.close();
-//                ois.close();
-//                clientFrm.closeConnection();
             }
         } catch (IOException ex) {
             Logger.getLogger(ThreadReceiveData.class.getName()).log(Level.SEVERE, null, ex);
