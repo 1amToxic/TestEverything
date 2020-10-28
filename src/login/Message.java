@@ -41,6 +41,8 @@ public class Message implements Serializable{
         LOGIN,
         LOGIN_SUCCESS,
         LOGIN_FAIL,
-        REGISTER
+        REGISTER,
+        REGISTER_SUCCESS,
+        REGISTER_FAIL
     }
 }

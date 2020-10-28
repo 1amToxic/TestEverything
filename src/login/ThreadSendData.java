@@ -8,7 +8,6 @@ package login;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +28,7 @@ public class ThreadSendData implements Runnable{
     @Override
     public void run() {
         try {
+            System.out.println("send data");
             oos.writeObject(mes);
         } catch (IOException ex) {
             Logger.getLogger(ThreadSendData.class.getName()).log(Level.SEVERE, null, ex);

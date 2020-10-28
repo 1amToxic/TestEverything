@@ -12,7 +12,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import thread.ThreadClient;
 
 /**
  *
@@ -32,6 +31,14 @@ public class ClientFrm extends javax.swing.JFrame {
     public ClientFrm() {
         initComponents();
         openConnection();
+    }
+
+    public void closeConnection() {
+        try {
+            mySocket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ClientFrm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public Socket openConnection() {
@@ -133,12 +140,12 @@ public class ClientFrm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+//        openConnection();
         String username = jTextField1.getText();
         String password = jTextField2.getText();
         User user = new User(username, password);
         
-            
-            Message mesSend = new Message(user, Message.Type.LOGIN);
+        Message mesSend = new Message(user, Message.Type.LOGIN);
 //            oos.writeObject(mesSend);
 //            Object o = ois.readObject();
 //            if (o instanceof Message) {
@@ -149,35 +156,46 @@ public class ClientFrm extends javax.swing.JFrame {
 //                    setNotification("Fail");
 //                }
 //            }
-            Thread thread = new Thread(new ThreadSendData(oos, ois, mesSend));
-            thread.start();
-            Thread thread1 = new Thread(new ThreadReceiveData(oos, ois, this));
-            thread1.start();
-        
+        Thread thread = new Thread(new ThreadSendData(oos, ois, mesSend));
+        thread.start();
+        Thread thread1 = new Thread(new ThreadReceiveData(oos, ois, this));
+        thread1.start();
+//        thread.interrupt();
+//        thread1.interrupt();
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+//        openConnection();
         String username = jTextField1.getText();
         String password = jTextField2.getText();
         User user = new User(username, password);
         try {
             Message mesSend = new Message(user, Message.Type.REGISTER);
-            oos.writeObject(mesSend);
-            Object o = ois.readObject();
-            if (o instanceof Message) {
-                Message mes = (Message) o;
-                if (mes.getType() == Message.Type.REGISTER) {
-                    setNotification("Success Register");
-                } 
-            }
+            Thread thread = new Thread(new ThreadSendData(oos, ois, mesSend));
+            thread.start();
+            Thread thread1 = new Thread(new ThreadReceiveData(oos, ois, this));
+            thread1.start();
+//            thread.interrupt();
+//            thread1.interrupt();
+//            oos.writeObject(mesSend);
+//            Object o = ois.readObject();
+//            if (o instanceof Message) {
+//                Message mes = (Message) o;
+//                if (mes.getType() == Message.Type.REGISTER_SUCCESS) {
+//                    setNotification("Success Register");
+//                }else{
+//                    setNotification("Fail Register");
+//                }
+//                    
+//            }
 //            Thread thread = new Thread(new ThreadClient(mySocket, this));
 //            thread.start();
-        } catch (IOException ex) {
-            Logger.getLogger(ClientFrm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ClientFrm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-      
+
     }//GEN-LAST:event_jButton3ActionPerformed
     public void setNotification(String mes) {
         JOptionPane.showMessageDialog(this, mes);

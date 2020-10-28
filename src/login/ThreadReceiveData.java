@@ -21,7 +21,7 @@ public class ThreadReceiveData implements Runnable {
     ObjectInputStream ois;
     ClientFrm clientFrm;
 
-    public ThreadReceiveData(ObjectOutputStream oos, ObjectInputStream ois,  ClientFrm clientFrm) {
+    public ThreadReceiveData(ObjectOutputStream oos, ObjectInputStream ois, ClientFrm clientFrm) {
         this.oos = oos;
         this.ois = ois;
         this.clientFrm = clientFrm;
@@ -30,14 +30,33 @@ public class ThreadReceiveData implements Runnable {
     @Override
     public void run() {
         try {
+            System.out.println("receive data");
             Object o = ois.readObject();
+            System.out.println("read");
             if (o instanceof Message) {
+                System.out.println("here");
                 Message mes = (Message) o;
-                if (mes.getType() == Message.Type.LOGIN_SUCCESS) {
-                    clientFrm.setNotification("Success");
-                } else {
-                    clientFrm.setNotification("Fail");
+                if (mes.getType() != null) {
+                    switch (mes.getType()) {
+                        case LOGIN_SUCCESS:
+                            clientFrm.setNotification("Login Success");
+                            break;
+                        case LOGIN_FAIL:
+                            clientFrm.setNotification("Login Fail");
+                            break;
+                        case REGISTER_SUCCESS:
+                            clientFrm.setNotification("Register Success");
+                            break;
+                        case REGISTER_FAIL:
+                            clientFrm.setNotification("Register Fail");
+                            break;
+                        default:
+                            break;
+                    }
                 }
+//                oos.close();
+//                ois.close();
+//                clientFrm.closeConnection();
             }
         } catch (IOException ex) {
             Logger.getLogger(ThreadReceiveData.class.getName()).log(Level.SEVERE, null, ex);

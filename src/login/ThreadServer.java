@@ -6,7 +6,6 @@
 package login;
 
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -24,9 +23,6 @@ public class ThreadServer implements Runnable {
 
     private ServerSocket myServer;
     private int serverPort = 8888;
-    Socket clientSocket;
-    ObjectOutputStream oos;
-    ObjectInputStream ois;
 
     public ThreadServer() {
         openServer();
@@ -43,12 +39,16 @@ public class ThreadServer implements Runnable {
     @Override
     public void run() {
         try {
-            clientSocket = myServer.accept();
-            ois = new ObjectInputStream(clientSocket.getInputStream());
-            oos = new ObjectOutputStream(clientSocket.getOutputStream());
+            Socket clientSocket = myServer.accept();
+            ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
+            ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
             while (true) {
+//                clientSocket = myServer.accept();
+//                ois = new ObjectInputStream(clientSocket.getInputStream());
+//                oos = new ObjectOutputStream(clientSocket.getOutputStream());
                 Object o = ois.readObject();
                 if (o instanceof Message) {
+                    System.out.println("server receiver");
                     User user = ((Message) o).getUser();
                     if (((Message) o).getType() == Message.Type.LOGIN) {
                         if (checkLogin(user)) {
@@ -59,8 +59,14 @@ public class ThreadServer implements Runnable {
                             oos.writeObject(mes);
                         }
                     } else {
-                         Message mes = new Message(user, Message.Type.REGISTER);
-                         oos.writeObject(mes);    
+                        if (checkValidRegister(user)) {
+                            Message mes = new Message(user, Message.Type.REGISTER_SUCCESS);
+                            oos.writeObject(mes);
+                        } else {
+                            Message mes = new Message(user, Message.Type.REGISTER_FAIL);
+                            oos.writeObject(mes);
+                        }
+
                     }
                 }
                 Thread.sleep(100);
@@ -79,6 +85,13 @@ public class ThreadServer implements Runnable {
 //        } catch (IOException ex) {
 //            Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+    }
+
+    private boolean checkValidRegister(User user) {
+        if (user.getUsername().equals("1") && user.getPassword().equals("1")) {
+            return false;
+        }
+        return true;
     }
 
     private boolean checkLogin(User user) {
